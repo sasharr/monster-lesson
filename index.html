@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vue Basics</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+        rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+</head>
+<body>
+<header>
+    <h1>Monster Slayer</h1>
+</header>
+<div id="game"
+     class="inner-layout">
+    <div class="flex space-between align-center">
+        <section id="monster" class="container">
+            <h2>Monster Health</h2>
+
+            <div class="bird bird-monster" :class="{ 'active': allAttack }">
+                <div class="head">
+                    <div class="eye eye-right">
+                        <div class="eye-inner eye-inner-right">
+                            <div class="eye-pupil"></div>
+                        </div>
+                    </div>
+
+                    <div class="nose"></div>
+
+                    <div class="eye eye-left">
+                        <div class="eye-inner eye-inner-left">
+                            <div class="eye-pupil"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="body-wrap">
+                    <div class="shape-1"></div>
+                    <div class="shape-2"></div>
+                    <div class="shape-3"></div>
+                </div>
+
+                <div class="legs">
+                    <div class="leg leg-left"></div>
+                    <div class="leg leg-right"></div>
+                </div>
+
+                <div class="tail"></div>
+
+                <div class="pseudo-knife">
+                    <div class="pseudo-knife-blade"></div>
+                    <div class="pseudo-knife-handle"></div>
+                </div>
+
+                <div class="knife">
+                    <div class="knife-blade"></div>
+                    <div class="knife-handle"></div>
+                </div>
+            </div>
+
+
+            <div class="healthbar">
+                <div class="healthbar__value"
+                     :style="monsterBarStyles"></div>
+            </div>
+        </section>
+        <section>
+            <div v-if="winner">
+                <h2>Game Over!</h2>
+                <h3 v-if="winner === 'monster'">You lost</h3>
+                <h3 v-else-if="winner === 'player'">You won</h3>
+                <h3 v-else>Its a draw</h3>
+                <button @click="startGame">Start New Game</button>
+            </div>
+            <div id="controls" v-else>
+                <button @click="attackMonster">Attack</button>
+                <button @click="specialAttackMonster"
+                        :disabled="mayUseSpecialAttackHeal">SpecialL Attack
+                </button>
+                <button @click="healPlayer"
+                        :disabled="mayUseSpecialAttackHeal">Heal
+                </button>
+                <button @click="surrender">Surrender</button>
+            </div>
+        </section>
+        <section id="player" class="container">
+            <h2>Your Health</h2>
+
+            <div class="bird" :class="{ 'active': allAttack }">
+                <div class="head">
+                    <div class="eye eye-right">
+                        <div class="eye-inner eye-inner-right">
+                            <div class="eye-pupil"></div>
+                        </div>
+                    </div>
+
+                    <div class="nose"></div>
+
+                    <div class="eye eye-left">
+                        <div class="eye-inner eye-inner-left">
+                            <div class="eye-pupil"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="body-wrap">
+                    <div class="shape-1"></div>
+                    <div class="shape-2"></div>
+                    <div class="shape-3"></div>
+                </div>
+
+                <div class="legs">
+                    <div class="leg leg-left"></div>
+                    <div class="leg leg-right"></div>
+                </div>
+
+                <div class="tail"></div>
+
+                <div class="pseudo-knife">
+                    <div class="pseudo-knife-blade"></div>
+                    <div class="pseudo-knife-handle"></div>
+                </div>
+
+                <div class="knife">
+                    <div class="knife-blade"></div>
+                    <div class="knife-handle"></div>
+                </div>
+            </div>
+
+            <div class="healthbar">
+                <div class="healthbar__value"
+                     :style="playerBarStyles"></div>
+            </div>
+        </section>
+    </div>
+
+    <section id="log" class="container log-battle">
+        <h2>Battle Log</h2>
+        <ul>
+            <li v-for="logMessage in logMessages">
+                <span
+                    :class="{'log--player': logMessage.actionBy === 'player',
+                'log--monster': logMessage.actionBy === 'monster'}">
+                    {{ logMessage.actionBy === 'player' ? 'Player' : 'Monster' }}
+                </span>
+                <span
+                    v-if="logMessage.actionType === 'heal'">
+                    Heals himself for
+                    <span class="log--heal">
+                        {{ logMessage.actionValue }}
+                    </span>
+                </span>
+                <span v-else>
+                    Attacks and deals
+                    <span class="log--damage">
+                    {{ logMessage.actionValue }}
+                </span>
+                </span>
+            </li>
+        </ul>
+    </section>
+</div>
+</body>
+</html>
